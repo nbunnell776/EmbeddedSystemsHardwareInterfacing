@@ -45,6 +45,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 DFSDM_Channel_HandleTypeDef hdfsdm1_channel1;
 
@@ -66,6 +67,7 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_DFSDM1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_QUADSPI_Init(void);
@@ -81,12 +83,14 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+static uint16_t adcValue;
+
 void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
 {
-	uint16_t adcValue = HAL_ADC_GetValue(&hadc1);
+	//uint16_t adcValue = HAL_ADC_GetValue(&hadc1);
 
 	// Define formatting strings to provide a clean serial output
-	char printString[255] = "\nARD-A1: raw: ";
+	char printString[255] = "\nARD-A2: raw: ";
 	char voltsString[20] = ", volts: ";
 
 	// Store value into a buffer
@@ -106,6 +110,8 @@ void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
 	strcat(printString, bufferVoltage);
 
 	HAL_UART_Transmit(&huart1, (uint8_t *) printString, strlen(printString), 1000);
+
+	HAL_ADC_Start_IT(&hadc1);
 }
 
 /* USER CODE END 0 */
@@ -138,6 +144,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_DFSDM1_Init();
   MX_I2C2_Init();
   MX_QUADSPI_Init();
@@ -154,36 +161,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   /************************************
-  * User Story 2 implementation begin:
-  *
-  * 	Connect ARD-1 to analog voltage
-  * 	source and read using ADC interrupt
-  * 	mode. Pipe output to console.
-  *
-  ***********************************/
+    * User Story 3 implementation begin:
+    *
+    * 	Connect ARD-2 to analog voltage
+    * 	source and read using ADC DMA
+    * 	mode. Pipe output to console.
+    *
+    ***********************************/
 
-  // Calibrate ADC1
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+    // Startup string to show that we're working
+    char startupString[255] = "Starting ADC DMA mode...\n";
+    HAL_UART_Transmit(&huart1, (uint8_t *) startupString, strlen(startupString), 1000);
 
-  while (1)
-  {
+    // Calibrate ADC1
+    HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+
+    while (1)
+    {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-	  // Blink & delay to give indication of *something* happening
-	  HAL_GPIO_TogglePin(LED3_WIFI__LED4_BLE_GPIO_Port, LED3_WIFI__LED4_BLE_Pin);
-	  HAL_Delay(1000);
+  	  // Blink & delay to give indication of *something* happening
+  	  HAL_GPIO_TogglePin(LED3_WIFI__LED4_BLE_GPIO_Port, LED3_WIFI__LED4_BLE_Pin);
+  	  HAL_Delay(1000);
 
-	  // Enable ADC1 in IT mode
-	  HAL_ADC_Start_IT(&hadc1);
+  	  // Enable ADC1 in IT mode
+  	  HAL_ADC_Start_DMA(&hadc1, &adcValue, 1);
 
-	  /************************************
-	  * User Story 2 implementation end
-	  *
-	  ***********************************/
+  	  /************************************
+  	  * User Story 3 implementation end
+  	  *
+  	  ***********************************/
 
-  }
+    }
   /* USER CODE END 3 */
 }
 
@@ -312,7 +323,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_13;
+  sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
@@ -591,6 +602,22 @@ static void MX_USB_OTG_FS_PCD_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -696,9 +723,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LPS22HB_INT_DRDY_EXTI0_Pin LSM6DSL_INT1_EXTI11_Pin ARD_D2_Pin HTS221_DRDY_EXTI15_Pin
+  /*Configure GPIO pins : LPS22HB_INT_DRDY_EXTI0_Pin PD11 ARD_D2_Pin HTS221_DRDY_EXTI15_Pin
                            PMOD_IRQ_EXTI12_Pin */
-  GPIO_InitStruct.Pin = LPS22HB_INT_DRDY_EXTI0_Pin|LSM6DSL_INT1_EXTI11_Pin|ARD_D2_Pin|HTS221_DRDY_EXTI15_Pin
+  GPIO_InitStruct.Pin = LPS22HB_INT_DRDY_EXTI0_Pin|GPIO_PIN_11|ARD_D2_Pin|HTS221_DRDY_EXTI15_Pin
                           |PMOD_IRQ_EXTI12_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -751,9 +778,6 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 
