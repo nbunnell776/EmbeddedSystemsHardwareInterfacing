@@ -85,13 +85,11 @@ static void MX_ADC1_Init(void);
 
 static uint16_t adcValue;
 
-void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-	//uint16_t adcValue = HAL_ADC_GetValue(&hadc1);
-
 	// Define formatting strings to provide a clean serial output
 	char printString[255] = "\nARD-A2: raw: ";
-	char voltsString[20] = ", volts: ";
+	char voltsString[] = ", volts: ";
 
 	// Store value into a buffer
 	char bufferRaw[20];
@@ -110,8 +108,6 @@ void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
 	strcat(printString, bufferVoltage);
 
 	HAL_UART_Transmit(&huart1, (uint8_t *) printString, strlen(printString), 1000);
-
-	HAL_ADC_Start_IT(&hadc1);
 }
 
 /* USER CODE END 0 */
@@ -161,40 +157,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   /************************************
-    * User Story 3 implementation begin:
-    *
-    * 	Connect ARD-2 to analog voltage
-    * 	source and read using ADC DMA
-    * 	mode. Pipe output to console.
-    *
-    ***********************************/
+  * User Story 3 implementation begin:
+  *
+  * 	Connect ARD-2 to analog voltage
+  * 	source and read using ADC DMA
+  * 	mode. Pipe output to console.
+  *
+  ***********************************/
 
-    // Startup string to show that we're working
-    char startupString[255] = "Starting ADC DMA mode...\n";
-    HAL_UART_Transmit(&huart1, (uint8_t *) startupString, strlen(startupString), 1000);
+  // Startup string to show that we're working
+  char startupString[255] = "Starting ADC DMA mode...\n";
+  HAL_UART_Transmit(&huart1, (uint8_t *) startupString, strlen(startupString), 1000);
 
-    // Calibrate ADC1
-    HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  // Calibrate ADC1
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 
-    while (1)
-    {
+  while (1)
+  {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-  	  // Blink & delay to give indication of *something* happening
-  	  HAL_GPIO_TogglePin(LED3_WIFI__LED4_BLE_GPIO_Port, LED3_WIFI__LED4_BLE_Pin);
-  	  HAL_Delay(1000);
+	  // Blink & delay to give indication of *something* happening
+	  HAL_GPIO_TogglePin(LED3_WIFI__LED4_BLE_GPIO_Port, LED3_WIFI__LED4_BLE_Pin);
+	  HAL_Delay(1000);
 
-  	  // Enable ADC1 in IT mode
-  	  HAL_ADC_Start_DMA(&hadc1, &adcValue, 1);
+	  // Enable ADC1 in IT mode
+	  HAL_ADC_Start_DMA(&hadc1, &adcValue, 1);
 
-  	  /************************************
-  	  * User Story 3 implementation end
-  	  *
-  	  ***********************************/
+	  /************************************
+	  * User Story 3 implementation end
+	  *
+	  ***********************************/
 
-    }
+  }
   /* USER CODE END 3 */
 }
 
@@ -323,7 +319,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
@@ -774,10 +770,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 

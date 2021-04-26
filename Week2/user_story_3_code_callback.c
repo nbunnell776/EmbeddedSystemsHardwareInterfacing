@@ -2,13 +2,11 @@
 
 static uint16_t adcValue;
 
-void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-	//uint16_t adcValue = HAL_ADC_GetValue(&hadc1);
-
 	// Define formatting strings to provide a clean serial output
 	char printString[255] = "\nARD-A2: raw: ";
-	char voltsString[20] = ", volts: ";
+	char voltsString[] = ", volts: ";
 
 	// Store value into a buffer
 	char bufferRaw[20];
@@ -27,6 +25,6 @@ void HAL_ADC_ConvCplt_Callback(ADC_HandleTypeDef *hadc)
 	strcat(printString, bufferVoltage);
 
 	HAL_UART_Transmit(&huart1, (uint8_t *) printString, strlen(printString), 1000);
-
-	HAL_ADC_Start_IT(&hadc1);
 }
+
+/* USER CODE END 0 */
