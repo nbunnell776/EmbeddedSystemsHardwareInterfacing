@@ -488,9 +488,6 @@ static void do_polling(void)
  80005c6:	6f39      	ldr	r1, [r7, #112]	; 0x70
  80005c8:	4819      	ldr	r0, [pc, #100]	; (8000630 <do_polling+0xb8>)
  80005ca:	f004 f820 	bl	800460e <HAL_UART_Receive>
-		// Duplicate output from TX data buffer to UART1 to show the actual data
-		// Should result in output similar to ".a.b.c"...
-		//HAL_UART_Transmit(&huart1, (uint8_t*) txBuffPtr, 1, 100);
 
 		// Error check comparison of buffer values
 		if (*txBuffPtr != *rxBuffPtr)
@@ -557,7 +554,6 @@ static void do_polling(void)
  8000638:	2000001e 	.word	0x2000001e
 
 0800063c <HAL_UART_TxCpltCallback>:
-
 
 // Define our interrupt-driven callback functions
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)

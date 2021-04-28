@@ -119,10 +119,6 @@ static void do_polling(void)
 		HAL_UART_Transmit(&huart4, (uint8_t*) txBuffPtr, 1, 100);
 		HAL_UART_Receive(&huart4, (uint8_t*) rxBuffPtr, 1, 100);
 
-		// Duplicate output from TX data buffer to UART1 to show the actual data
-		// Should result in output similar to ".a.b.c"...
-		//HAL_UART_Transmit(&huart1, (uint8_t*) txBuffPtr, 1, 100);
-
 		// Error check comparison of buffer values
 		if (*txBuffPtr != *rxBuffPtr)
 		{
@@ -140,7 +136,6 @@ static void do_polling(void)
 	// Maintain loop through length of transmit data buffer
 	} while (txBuffPtr < (txBuffer + sizeof(txBuffer)));
 }
-
 
 // Define our interrupt-driven callback functions
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
