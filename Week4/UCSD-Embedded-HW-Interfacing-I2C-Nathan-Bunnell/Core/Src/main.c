@@ -107,7 +107,7 @@ static void HST221_pwr_en(void)
 
     // Print status results over UART1 to console session
     snprintf(buffer, sizeof(buffer), "\n(HST221 Power-Down Control) HAL_I2C_Master_Transmit: status %u\n", status);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Read response back to get value of WHO_AM_I register
 	uint8_t mode = 0xff;    // Default value should be 0 according to datasheet, target is 1 for enabled
@@ -115,7 +115,7 @@ static void HST221_pwr_en(void)
 
 	// Print status results and response value over UART1 to console session
 	snprintf(buffer, sizeof(buffer), "(HST221 Power-Down Control) HAL_I2C_Master_Receive status: %u; mode: 0x%x\n", status, mode);
-	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 }
 
 static void do_who_am_i(void)
@@ -130,7 +130,7 @@ static void do_who_am_i(void)
     // Print status results over UART1 to console session
     char buffer[100] = {0};
     snprintf(buffer, sizeof(buffer), "\tHAL_I2C_Master_Transmit status: %u\n", status);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Read response back to get value of WHO_AM_I register
     uint8_t data = 0xff;    // Default value should be 0xbc according to datasheet
@@ -138,7 +138,7 @@ static void do_who_am_i(void)
 
     // Print status results and response value over UART1 to console session
     snprintf(buffer, sizeof(buffer), "\tHAL_I2C_Master_Receive status: %u; data: 0x%x\n\n", status, data);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 }
 
 
@@ -157,8 +157,7 @@ static void do_temp_polling(void)
 
     // Print status results over UART1 to console session
     snprintf(buffer, sizeof(buffer), "\t(One-shot enabled): HAL_I2C_Master_Transmit: status %u\n", status);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-    memset(buffer, '\0', sizeof(buffer));
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Define status register (STATUS_REG2, 0x27) bit 0 to monitor for new sample available
     uint8_t statusReg = 0x27;
@@ -171,21 +170,18 @@ static void do_temp_polling(void)
         // Send the address of the status register and report it over the console
         status = HAL_I2C_Master_Transmit(&hi2c2, HST221_WRITE_ADDRESS, &statusReg, sizeof(statusReg), 1000);
         snprintf(buffer, sizeof(buffer), "\t[%d] (status register): HAL_I2C_Master_Transmit: status %u\n", count, status);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // Read back the value of the status register and report it over the console
         status = HAL_I2C_Master_Receive(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&sampleReady, sizeof(sampleReady), 1000);
         snprintf(buffer, sizeof(buffer), "\tStatus register: 0x%02x\n", sampleReady);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // If the new sample is ready, report it to the console and break out of while-loop...
         if (sampleReady & 0x01)
         {
             snprintf(buffer, sizeof(buffer), "\tNew Temperature Sample Available!\n");
-            HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-            memset(buffer, '\0', sizeof(buffer));
+            HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
             break;
         }
 
@@ -207,30 +203,26 @@ static void do_temp_polling(void)
         uint8_t tempRegLSB = 0x2a;
         status = HAL_I2C_Master_Transmit(&hi2c2, HST221_WRITE_ADDRESS, &tempRegLSB, sizeof(tempRegLSB), 1000);
         snprintf(buffer, sizeof(buffer), "\t(LSB): HAL_I2C_Master_Transmit: status: %u\n", status);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // Read response back and print over console
         uint8_t tempDataLSB = 0xff; // Junk default value
         status = HAL_I2C_Master_Receive(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&tempDataLSB, sizeof(tempDataLSB), 1000);
         snprintf(buffer, sizeof(buffer), "\t(LSB): HAL_I2C_Master_Receive: status: %u; LSB data: 0x%02x\n", status, tempDataLSB);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // Reading the upper half of the temperature register
         // Send target address
         uint8_t tempRegMSB = 0x2b;
         status = HAL_I2C_Master_Transmit(&hi2c2, HST221_WRITE_ADDRESS, &tempRegMSB, sizeof(tempRegMSB), 1000);
         snprintf(buffer, sizeof(buffer), "\t(MSB): HAL_I2C_Master_Transmit: status: %u\n", status);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // Read response back and print over console
         uint8_t tempDataMSB = 0xff; // Junk default value
         status = HAL_I2C_Master_Receive(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&tempDataMSB, sizeof(tempDataMSB), 1000);
         snprintf(buffer, sizeof(buffer), "\t(MSB): HAL_I2C_Master_Receive: status: %u; MSB data: 0x%02x\n\n", status, tempDataMSB);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
     }
     else
     {
@@ -241,15 +233,13 @@ static void do_temp_polling(void)
         uint8_t tempRegLSB = 0x2a | 0x80;
         status = HAL_I2C_Master_Transmit(&hi2c2, HST221_WRITE_ADDRESS, &tempRegLSB, sizeof(tempRegLSB), 1000);
         snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Transmit: status: %u\n", status);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
         // Read response back for both registers and print over console
         uint16_t tempData = 0xbeef; // Junk default value (ALSO REALLY HOT!)
         status = HAL_I2C_Master_Receive(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&tempData, sizeof(tempData), 1000);
         snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Receive: status: %u; temperature data: 0x%04x\n\n", status, tempData);
-        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-        memset(buffer, '\0', sizeof(buffer));
+        HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
     }
 
 }
@@ -298,8 +288,7 @@ static void do_temp_interrupt(void)
 
     // Print status results over UART1 to console session
     snprintf(buffer, sizeof(buffer), "\t(One-shot enabled): HAL_I2C_Master_Transmit_IT: status %u\n", status);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-    memset(buffer, '\0', sizeof(buffer));
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Wait for interrupt to complete
 	while (irqCompleteTX == 0)
@@ -315,8 +304,7 @@ static void do_temp_interrupt(void)
 	uint8_t tempRegLSB = 0x2a | 0x80;
 	status = HAL_I2C_Master_Transmit_IT(&hi2c2, HST221_WRITE_ADDRESS, &tempRegLSB, sizeof(tempRegLSB));
 	snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Transmit_IT: status: %u\n", status);
-	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-	memset(buffer, '\0', sizeof(buffer));
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Wait for interrupt to complete
 	while (irqCompleteTX == 0)
@@ -327,9 +315,7 @@ static void do_temp_interrupt(void)
 	// Read response back for both registers and print over console
 	status = HAL_I2C_Master_Receive_IT(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&tempData, sizeof(tempData));
 	snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Receive_IT: status: %u; temperature data: 0x%04x\n\n", status, tempData);
-	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-	memset(buffer, '\0', sizeof(buffer));
-
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 }
 
 static void do_temp_dma(void)
@@ -351,8 +337,7 @@ static void do_temp_dma(void)
 
     // Print status results over UART1 to console session
     snprintf(buffer, sizeof(buffer), "\t(One-shot enabled): HAL_I2C_Master_Transmit_DMA: status %u\n", status);
-    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-    memset(buffer, '\0', sizeof(buffer));
+    HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Wait for interrupt to complete
 	while (irqCompleteTX == 0)
@@ -368,8 +353,7 @@ static void do_temp_dma(void)
 	uint8_t tempRegLSB = 0x2a | 0x80;
 	status = HAL_I2C_Master_Transmit_DMA(&hi2c2, HST221_WRITE_ADDRESS, &tempRegLSB, sizeof(tempRegLSB));
 	snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Transmit_DMA: status: %u\n", status);
-	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-	memset(buffer, '\0', sizeof(buffer));
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 
     // Wait for interrupt to complete
     while (irqCompleteTX == 0)
@@ -380,8 +364,7 @@ static void do_temp_dma(void)
     // Read response back for both registers and print over console
 	status = HAL_I2C_Master_Receive_DMA(&hi2c2, HST221_READ_ADDRESS, (uint8_t *)&tempData, sizeof(tempData));
 	snprintf(buffer, sizeof(buffer), "\t(Auto-increment): HAL_I2C_Master_Receive_DMA: status: %u; temperature data: 0x%04x\n\n", status, tempData);
-	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, sizeof(buffer), 1000);
-	memset(buffer, '\0', sizeof(buffer));
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 }
 
 static void do_temp_interrupt_EXTI(void)
