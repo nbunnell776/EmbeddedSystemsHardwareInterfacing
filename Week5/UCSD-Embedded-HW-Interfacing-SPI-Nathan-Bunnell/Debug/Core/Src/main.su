@@ -1,0 +1,12 @@
+main.c:84:6:do_qspi_status	112	static
+main.c:94:6:do_qspi_info	136	static
+main.c:117:5:main	24	static
+main.c:205:6:SystemClock_Config	232	static
+main.c:282:13:MX_DFSDM1_Init	8	static
+main.c:320:13:MX_QUADSPI_Init	8	static
+main.c:353:13:MX_SPI3_Init	8	static
+main.c:393:13:MX_USART1_UART_Init	8	static
+main.c:428:13:MX_USART3_UART_Init	8	static
+main.c:463:13:MX_USB_OTG_FS_PCD_Init	8	static
+main.c:498:13:MX_GPIO_Init	48	static
+main.c:688:6:Error_Handler	4	static,ignoring_inline_asm
