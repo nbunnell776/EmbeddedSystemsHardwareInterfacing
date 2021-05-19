@@ -1,0 +1,38 @@
+****** WIFI Web Server demonstration******
+
+
+Running HTML Server test
+ES-WIFI Initialized.
+> eS-WiFi module MAC Address : C4:7F:51:07:D0:6F
+
+Connecting to Bunnell , Password
+> es-wifi module connected: got IP Address : 192.168.43.131
+Server is running and waiting for an HTTP  Client connection to 192.168.43.131
+Waiting connection to  192.168.43.131
+Client connected 192.168.43.1:33644
+get 439 byte from server
+Send page after  GET command
+Waiting connection to  192.168.43.131
+Client connected 192.168.43.1:33646
+get 382 byte from server
+Send page after  GET command
+Waiting connection to  192.168.43.131
+...
+Client connected 192.168.43.1:33648
+get 605 byte from server
+Post request
+Send Page after POST command
+Client connected 192.168.43.1:33650
+get 382 byte from server
+Send page after  GET command
+Waiting connection to  192.168.43.131
+...
+Client connected 192.168.43.1:33654
+get 605 byte from server
+Post request
+Send Page after POST command
+Waiting connection to  192.168.43.131
+Client connected 192.168.43.1:33656
+get 382 byte from server
+Send page after  GET command
+Waiting connection to  192.168.43.131
