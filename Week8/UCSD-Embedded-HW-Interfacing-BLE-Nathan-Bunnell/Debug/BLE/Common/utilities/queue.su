@@ -1,0 +1,6 @@
+queue.c:52:5:CircularQueue_Init	24	static
+queue.c:74:10:CircularQueue_Add	48	static
+queue.c:147:10:CircularQueue_Remove	24	static
+queue.c:176:10:CircularQueue_Sense	24	static
+queue.c:198:5:CircularQueue_Empty	24	static
+queue.c:208:5:CircularQueue_NbElement	16	static

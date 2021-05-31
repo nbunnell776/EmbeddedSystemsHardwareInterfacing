@@ -1,0 +1,12 @@
+list.c:29:6:LST_init_head	16	static
+list.c:35:9:LST_is_empty	32	static,ignoring_inline_asm
+list.c:55:6:LST_insert_head	32	static,ignoring_inline_asm
+list.c:71:6:LST_insert_tail	32	static,ignoring_inline_asm
+list.c:87:6:LST_remove_node	32	static,ignoring_inline_asm
+list.c:101:6:LST_remove_head	32	static,ignoring_inline_asm
+list.c:115:6:LST_remove_tail	32	static,ignoring_inline_asm
+list.c:129:6:LST_insert_node_after	32	static,ignoring_inline_asm
+list.c:145:6:LST_insert_node_before	32	static,ignoring_inline_asm
+list.c:161:5:list_get_size	40	static,ignoring_inline_asm
+list.c:182:6:list_get_next_node	32	static,ignoring_inline_asm
+list.c:195:6:list_get_prev_node	32	static,ignoring_inline_asm

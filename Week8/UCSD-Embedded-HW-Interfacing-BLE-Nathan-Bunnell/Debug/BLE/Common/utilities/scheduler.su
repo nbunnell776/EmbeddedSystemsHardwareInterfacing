@@ -1,0 +1,9 @@
+scheduler.c:47:6:SCH_Run	40	static,ignoring_inline_asm
+scheduler.c:81:6:SCH_RegTask	32	static,ignoring_inline_asm
+scheduler.c:99:6:SCH_SetTask	32	static,ignoring_inline_asm
+scheduler.c:117:6:SCH_PauseTask	32	static,ignoring_inline_asm
+scheduler.c:136:6:SCH_ResumeTask	32	static,ignoring_inline_asm
+scheduler.c:155:6:SCH_SetEvt	32	static,ignoring_inline_asm
+scheduler.c:173:6:SCH_WaitEvt	24	static
+scheduler.c:227:13:SCH_EvtIdle	8	static
+scheduler.c:237:13:SCH_Idle	4	static

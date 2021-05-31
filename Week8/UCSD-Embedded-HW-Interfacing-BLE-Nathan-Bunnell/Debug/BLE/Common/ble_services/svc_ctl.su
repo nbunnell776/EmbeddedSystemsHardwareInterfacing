@@ -1,0 +1,15 @@
+svc_ctl.c:82:13:DIS_Init	16	static
+svc_ctl.c:83:13:HRS_Init	4	static
+svc_ctl.c:84:13:BAS_Init	16	static
+svc_ctl.c:85:13:ANS_Init	4	static
+svc_ctl.c:86:13:HIDS_Init	4	static
+svc_ctl.c:87:13:HPS_Init	4	static
+svc_ctl.c:88:13:IPSS_Init	4	static
+svc_ctl.c:89:13:LNS_Init	4	static
+svc_ctl.c:90:13:SCPS_Init	4	static
+svc_ctl.c:91:13:BLESVC_InitCustomSvc	4	static
+svc_ctl.c:95:6:SVCCTL_Init	48	static
+svc_ctl.c:380:6:SVCCTL_RegisterSvcHandler	16	static
+svc_ctl.c:395:6:SVCCTL_RegisterCltHandler	16	static
+svc_ctl.c:405:6:SVCCTL_HCI_UserEvtRx	32	static
+svc_ctl.c:499:23:SVCCTL_GetBdAddress	4	static

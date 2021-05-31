@@ -1,0 +1,5 @@
+lb_demo.c:295:6:LBR_Init	56	static
+lb_demo.c:929:6:LBR_Adv_Request	48	static
+lb_demo.c:960:6:SVCCTL_App_Notification	32	static
+lb_demo.c:1015:6:LBR_App_Key_Button_Action	8	static
+lb_demo.c:1022:6:BLESVC_InitCustomSvc	8	static

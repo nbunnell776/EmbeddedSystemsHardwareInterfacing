@@ -1,0 +1,4 @@
+lb_server_app.c:65:6:LBR_Notification	16	static
+lb_server_app.c:84:6:LBSAPP_Init	4	static
+lb_server_app.c:99:6:LB_App_Button_Trigger_Received	8	static
+lb_server_app.c:137:6:LBS_App_Notification	16	static

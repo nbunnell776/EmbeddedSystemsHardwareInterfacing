@@ -1,0 +1,10 @@
+tl_ble_hci.c:70:13:Initialization	8	static
+tl_ble_hci.c:79:13:Cmd_SetStatus	16	static
+tl_ble_hci.c:94:6:TL_BLE_EvtReceived	24	static
+tl_ble_hci.c:114:6:hci_timeout_callback	8	static
+tl_ble_hci.c:131:6:TL_BLE_HCI_Init	24	static
+tl_ble_hci.c:159:24:CmdGetStatus	4	static
+tl_ble_hci.c:164:6:TL_BLE_HCI_UserEvtProc	16	static
+tl_ble_hci.c:178:9:TL_BLE_HCI_SendCmd	40	static
+tl_ble_hci.c:253:6:SendCmd	16	static
+tl_ble_hci.c:267:9:hci_send_req	16	static

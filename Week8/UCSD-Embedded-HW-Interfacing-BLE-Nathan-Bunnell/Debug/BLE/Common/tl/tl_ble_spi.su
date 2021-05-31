@@ -1,0 +1,5 @@
+tl_ble_spi.c:64:6:TL_BLE_Init	24	static
+tl_ble_spi.c:99:6:TL_BLE_SendCmd	8	static
+tl_ble_spi.c:112:6:HW_BNRG_Isr	16	static
+tl_ble_spi.c:191:6:TL_BLE_EvtDone	16	static
+tl_ble_spi.c:200:13:Allocate_New_Buffer_To_TL	8	static

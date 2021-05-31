@@ -1,0 +1,5 @@
+tl_ble_reassembly.c:62:6:TL_BLE_R_EvtInput	16	static
+tl_ble_reassembly.c:71:6:TL_BLE_R_EvtProc	8	static
+tl_ble_reassembly.c:86:6:TL_BLE_R_Init	16	static
+tl_ble_reassembly.c:104:13:Event_Queue_Process	32	static
+tl_ble_reassembly.c:167:6:TL_BLE_R_EvtDone	16	static

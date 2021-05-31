@@ -1,0 +1,2 @@
+bluenrg_l2cap_aci.c:31:12:aci_l2cap_connection_parameter_update_request	64	static
+bluenrg_l2cap_aci.c:61:12:aci_l2cap_connection_parameter_update_response	72	static
