@@ -40,8 +40,8 @@
 #define HTS221_READ_ADDRESS 0xbf
 #define HTS221_WRITE_ADDRESS 0xbe
 
-#define DS3231_READ_ADDRESS 0x68
-#define DS3231_WRITE_ADDRESS 0x68
+#define DS3231_READ_ADDRESS 0xd1
+#define DS3231_WRITE_ADDRESS 0xd1
 
 /* USER CODE END PD */
 
@@ -129,81 +129,75 @@ static void do_get_time(void)
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Seconds_Address, sizeof(Seconds_Address), 1000);
 	uint8_t Seconds_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Seconds_Value, sizeof(Seconds_Value), 1000);
-	uint8_t Seconds = (Seconds_Value & 0x0f);
-	uint8_t s10_Seconds = (Seconds_Value & 0x70);
 
 	// Register Minutes, address 0x01
 	uint8_t Minutes_Address = 0x01;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Minutes_Address, sizeof(Minutes_Address), 1000);
 	uint8_t Minutes_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Minutes_Value, sizeof(Minutes_Value), 1000);
-	uint8_t Minutes = (Minutes_Value & 0x0f);
-	uint8_t s10_Minutes = (Minutes_Value & 0x70);
 
 	// Register Hour, address 0x02
 	uint8_t Hour_Address = 0x02;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Hour_Address, sizeof(Hour_Address), 1000);
 	uint8_t Hour_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Hour_Value, sizeof(Hour_Value), 1000);
-	uint8_t Hours = (Hour_Value & 0x0f);
-	uint8_t s10_Hours = (Hour_Value & 0x10);
 
 	// Register Day, address 0x03
 	uint8_t Day_Address = 0x03;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Day_Address, sizeof(Day_Address), 1000);
 	uint8_t Day_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Day_Value, sizeof(Day_Value), 1000);
-	uint8_t Days = (Hour_Value & 0x07);
 
 	// Register Date, address 0x04
 	uint8_t Date_Address = 0x04;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Date_Address, sizeof(Date_Address), 1000);
 	uint8_t Date_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Date_Value, sizeof(Date_Value), 1000);
-	uint8_t Date = (Date_Value & 0x0f);
-	uint8_t s10_Date = (Date_Value & 0x30);
 
 	// Register Month, address 0x05
 	uint8_t Month_Address = 0x05;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Month_Address, sizeof(Month_Address), 1000);
 	uint8_t Month_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Month_Value, sizeof(Month_Value), 1000);
-	uint8_t Months = (Month_Value & 0x0f);
-	uint8_t s10_Months = (Month_Value & 0x10);
 
 	// Register Year, address 0x06
 	uint8_t Year_Address = 0x06;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Year_Address, sizeof(Year_Address), 1000);
 	uint8_t Year_Value;
 	HAL_I2C_Master_Receive(&hi2c1, DS3231_READ_ADDRESS, (uint8_t *)&Year_Value, sizeof(Year_Value), 1000);
-	uint8_t Year = (Year_Value & 0x0f);
-	uint8_t s10_Year = (Year_Value & 0xf0);
 
 	// Print results to console
-	snprintf(buffer, sizeof(buffer), "\tCurrent time is %d%d:%d%d:%d%d on %d%d-%d%d-%d%d", s10_Hours, Hours, s10_Minutes, Minutes, s10_Seconds, Seconds, s10_Months, Months, s10_Date, Date, s10_Year, Year);
+	snprintf(buffer, sizeof(buffer), "\tCurrent time is %02x:%02x:%02x on %02x-%02x-%02x\n\n", \
+			Hour_Value, Minutes_Value, Seconds_Value, Month_Value, Date_Value, Year_Value);
 	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
+
+
+
 }
 
 static void do_set_time(void)
 {
-	// Set time to 00:00:00 on Monday, 01/01/2021. Just use this as areset point for demo purposes
+	// Set time to 0's
+
+	// Large char buffer for strings sent over the console
+	char buffer[100] = {0};
 
 	// Register Seconds, address 0x00
 	uint8_t Seconds_Address = 0x00;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Seconds_Address, sizeof(Seconds_Address), 1000);
-	uint8_t Seconds_Value = 0x00;
+	uint8_t Seconds_Value = 0x0;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Seconds_Value, sizeof(Seconds_Value), 1000);
 
 	// Register Minutes, address 0x01
 	uint8_t Minutes_Address = 0x01;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Minutes_Address, sizeof(Minutes_Address), 1000);
-	uint8_t Minutes_Value = 0x00;
+	uint8_t Minutes_Value = 0x0;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Minutes_Value, sizeof(Minutes_Value), 1000);
 
 	// Register Hour, address 0x02
 	uint8_t Hour_Address = 0x02;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Hour_Address, sizeof(Hour_Address), 1000);
-	uint8_t Hour_Value = 0x00;
+	uint8_t Hour_Value = 0x0;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Hour_Value, sizeof(Hour_Value), 1000);
 
 	// Register Day, address 0x03
@@ -227,12 +221,19 @@ static void do_set_time(void)
 	// Register Year, address 0x06
 	uint8_t Year_Address = 0x06;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Year_Address, sizeof(Year_Address), 1000);
-	uint8_t Year_Value = 0x21;
+	uint8_t Year_Value = 0x01;
 	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Year_Value, sizeof(Year_Value), 1000);
 
-	char* statusString = "\tTime is set to 00:00:00 on Monday, 01/01/2021!\n";
-	HAL_UART_Transmit(&huart1, (uint8_t*) statusString, strlen(statusString), 1000);
+	// Register Temp_LSB, address 0x12
+	uint8_t Temp_LSB_Address = 0x12;
+	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Temp_LSB_Address, sizeof(Temp_LSB_Address), 1000);
+	uint8_t Temp_LSB_Value = 0x00;
+	HAL_I2C_Master_Transmit(&hi2c1, DS3231_WRITE_ADDRESS, &Temp_LSB_Value, sizeof(Temp_LSB_Value), 1000);
 
+	snprintf(buffer, sizeof(buffer), "\tWritten time is %02x:%02x:%02x on %02x-%02x-%02x\n", \
+				Hour_Value, Minutes_Value, Seconds_Value, Month_Value, Date_Value, Year_Value);
+
+	HAL_UART_Transmit(&huart1, (uint8_t*) buffer, strlen(buffer), 1000);
 }
 
 static void HTS221_pwr_en(void)
